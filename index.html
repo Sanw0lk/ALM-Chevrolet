@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<!-- Tienda generada con Harvys, asistente de e-commerce creado por el Profesor Harvey Sanabria -->
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ALM Chevrolet — Encuentra el repuesto que tu motor necesita.</title>
+<meta name="description" content="Repuestos para automóviles en Bogotá. Consulta disponibilidad y compatibilidad de piezas para tu vehículo por WhatsApp.">
+<meta name="generator" content="Harvys — asistente de e-commerce del Profesor Harvey Sanabria">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body class="anim-media tarj-borde modo-oscuro">
+
+<!-- MODAL PAGO -->
+<div class="modal-overlay" id="modal-pago" onclick="modalClickFuera(event)">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-head"><h3>Confirmar pago</h3><button class="modal-cerrar" onclick="cerrarModal()" aria-label="Cerrar">✕</button></div>
+    <div class="modal-body">
+      <div class="modal-total"><span class="tl">Total a pagar</span><span class="tm" id="modal-total-monto">$0</span></div>
+      <div class="pago-metodos" id="pago-metodos"></div>
+      <div class="pago-datos" id="pago-datos">
+        <div class="pd-label">Transferir a este número</div>
+        <div class="pd-numero" id="pd-numero"></div>
+        <div class="pd-nombre" id="pd-nombre"></div>
+        <button class="btn-copiar" onclick="copiarNumero()">📋 Copiar número</button>
+      </div>
+      <div class="pasos">
+        <div class="paso"><div class="paso-num">1</div><div class="paso-txt" id="paso-1"></div></div>
+        <div class="paso"><div class="paso-num">2</div><div class="paso-txt">Toca <strong>"Confirmar y enviar"</strong> — se abre WhatsApp con tu pedido</div></div>
+        <div class="paso"><div class="paso-num">3</div><div class="paso-txt" id="paso-3"></div></div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <a href="#" target="_blank" rel="noopener" class="btn-wsp" onclick="return prepararWsp(this)">✅ Confirmar y enviar por WhatsApp</a>
+      <button class="btn-seguir" onclick="cerrarModal()">← Seguir comprando</button>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="overlay" onclick="cerrarCarrito()"></div>
+
+<!-- VISOR DE FOTOS -->
+<div class="visor" id="visor" role="dialog" aria-modal="true" aria-label="Foto del producto">
+  <figure class="visor-caja">
+    <button class="visor-cerrar" aria-label="Cerrar">✕</button>
+    <div class="visor-foto" id="visor-foto"><img id="visor-img" alt=""></div>
+    <figcaption><strong id="visor-nombre"></strong><span id="visor-precio"></span></figcaption>
+    <div class="visor-ayuda">Toca o haz clic en la foto para ampliarla más</div>
+  </figure>
+</div>
+
+<button class="carrito-fab" onclick="toggleCarrito()" id="fab" aria-label="Abrir carrito">🛒<span class="carrito-badge" id="badge">0</span></button>
+
+<div class="carrito-panel" id="panel-carrito">
+  <div class="panel-header"><h3>Tu pedido de repuestos</h3><button class="btn-cerrar" onclick="cerrarCarrito()" aria-label="Cerrar carrito">✕</button></div>
+  <ul id="lista-carrito"></ul>
+  <div class="panel-footer">
+    <div class="total-row"><span class="total-lbl">Total</span><span class="total-monto" id="total">$0</span></div>
+    <div class="panel-btns"><button class="btn-vaciar" onclick="vaciarCarrito()">Vaciar</button><button class="btn-pagar" onclick="pagar()">Consultar pedido por WhatsApp</button></div>
+  </div>
+</div>
+
+<!-- ASISTENTE DE LA TIENDA (responde con los datos de esta tienda) -->
+<span class="as-aviso" id="as-aviso">¿Te ayudo? 👋</span>
+<button class="as-burbuja" id="as-burbuja" aria-label="Abrir el asistente de la tienda"><svg class="as-robot" viewBox="0 0 64 64" aria-hidden="true">
+      <line x1="32" y1="5" x2="32" y2="14" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+      <circle class="as-antena" cx="32" cy="5" r="4" fill="currentColor"/>
+      <rect x="4" y="27" width="6" height="12" rx="3" fill="currentColor"/>
+      <rect x="54" y="27" width="6" height="12" rx="3" fill="currentColor"/>
+      <rect x="10" y="14" width="44" height="38" rx="15" fill="currentColor"/>
+      <rect x="16" y="21" width="32" height="20" rx="10" fill="var(--as-cara)"/>
+      <circle class="as-ojo" cx="25" cy="31" r="4" fill="currentColor"/>
+      <circle class="as-ojo" cx="39" cy="31" r="4" fill="currentColor"/>
+      <path d="M26 45q6 4 12 0" stroke="var(--as-cara)" stroke-width="3" fill="none" stroke-linecap="round"/>
+    </svg></button>
+<div class="as-panel" id="as-panel" role="dialog" aria-label="Iori">
+  <div class="as-cabecera">
+    <div class="as-avatar"><svg class="as-robot" viewBox="0 0 64 64" aria-hidden="true">
+      <line x1="32" y1="5" x2="32" y2="14" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+      <circle class="as-antena" cx="32" cy="5" r="4" fill="currentColor"/>
+      <rect x="4" y="27" width="6" height="12" rx="3" fill="currentColor"/>
+      <rect x="54" y="27" width="6" height="12" rx="3" fill="currentColor"/>
+      <rect x="10" y="14" width="44" height="38" rx="15" fill="currentColor"/>
+      <rect x="16" y="21" width="32" height="20" rx="10" fill="var(--as-cara)"/>
+      <circle class="as-ojo" cx="25" cy="31" r="4" fill="currentColor"/>
+      <circle class="as-ojo" cx="39" cy="31" r="4" fill="currentColor"/>
+      <path d="M26 45q6 4 12 0" stroke="var(--as-cara)" stroke-width="3" fill="none" stroke-linecap="round"/>
+    </svg></div>
+    <div><strong>Iori</strong><small><i></i> En línea</small></div>
+    <button id="as-cerrar" aria-label="Cerrar el asistente">✕</button>
+  </div>
+  <div class="as-mensajes" id="as-mensajes"></div>
+  <div class="as-chips" id="as-chips"></div>
+  <form class="as-form" id="as-form">
+    <input id="as-input" placeholder="Escribe tu pregunta…" autocomplete="off" aria-label="Tu pregunta">
+    <button type="submit" aria-label="Enviar"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5"/><path d="m5 12 7-7 7 7"/></svg></button>
+  </form>
+</div>
+
+<header class="hero hero-centrado">
+  <div class="hero-bg efecto-ninguno"></div>
+  <div class="hero-content">
+    <div>
+      
+      <div class="hero-badge">Repuestos para automóviles · Bogotá</div>
+      <h1>ALM<span>Chevrolet</span></h1>
+      <p class="hero-sub">Encuentra el repuesto que tu motor necesita. Explora nuestro catálogo y confirma la compatibilidad por WhatsApp antes de comprar.</p>
+      <a href="#catalogo" class="btn-hero">Explorar repuestos
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+      <div class="hero-stats"><div class="hero-stat"><div class="num">6</div><div class="lbl">Repuestos en el catálogo</div></div><div class="hero-stat"><div class="num">Bogotá</div><div class="lbl">Domicilios locales</div></div><div class="hero-stat"><div class="num">Colombia</div><div class="lbl">Envíos con costo</div></div></div>
+    </div>
+    </div>
+  <div class="hero-scroll"><div></div></div>
+</header>
+
+<section class="banner-sec">
+  <div class="banner-glow"></div>
+  <div class="banner-content">
+    <div class="sec-label">Piezas para tu vehículo</div>
+    <h2>Tu próximo repuesto, <em>a un mensaje</em></h2>
+    <p>Consulta balancín, decalador, soporte motor, termostato, bomba de agua y culata. Confirma la referencia adecuada para tu automóvil, el transporte y las condiciones de entrega con ALM Chevrolet.</p>
+    <div class="banner-chips"><span class="chip">Domicilios en Bogotá</span><span class="chip">Recogida personal</span><span class="chip">Envíos con costo</span><span class="chip">Consulta por WhatsApp</span></div>
+  </div>
+</section>
+
+<div class="filtros-wrap" id="filtros-bar">
+  <div class="busqueda-wrap">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z"/></svg>
+    <input type="text" id="buscador" placeholder="Buscar producto..." oninput="filtrarBusqueda()">
+  </div>
+</div>
+<section class="catalogo-wrap" id="catalogo">
+  <div class="catalogo-header">
+    <div><div class="sec-label">Encuentra tu pieza</div><div class="sec-title">Catálogo de repuestos</div></div>
+    <div class="catalogo-count" id="cont-count"></div>
+  </div>
+  <div id="productos"></div>
+</section>
+
+<section class="beneficios-sec" id="beneficios">
+  <div class="sec-centro"><div class="sec-label">Compra a tu manera</div><div class="sec-title">Así te atendemos en ALM</div></div>
+  <div class="beneficios-grid">
+    <div class="bcard"><div class="bcard-icono">🚚</div><h3>Domicilios en Bogotá</h3><p>Tiempo aproximado informado: 40 minutos. Confirma el plazo y las condiciones para tu dirección por WhatsApp.</p></div><div class="bcard"><div class="bcard-icono">📦</div><h3>Envíos nacionales</h3><p>Enviamos a otras ciudades con costo de transporte. Consulta el valor y el plazo antes de pedir.</p></div><div class="bcard"><div class="bcard-icono">📍</div><h3>Recogida personal</h3><p>También puedes recoger tu repuesto. Coordina la dirección y el horario con el negocio.</p></div>
+  </div>
+</section>
+
+<section class="recs-sec">
+  <div class="sec-label">Explora el catálogo</div>
+  <div class="sec-title">Repuestos para tener en cuenta</div>
+  <div class="recs-grid" id="recomendados"></div>
+</section>
+
+<section class="top-sec">
+  <div class="sec-label">Los favoritos de la comunidad</div>
+  <div class="sec-title">Repuestos más votados</div>
+  <div class="top-grid" id="top"></div>
+</section>
+
+<section class="duelo-sec">
+  <div class="sec-label">Tu opinión cuenta</div>
+  <div class="sec-title">¿Qué repuesto quieres destacar?</div>
+  <div class="duelo-arena" id="duelo"></div>
+  <p class="duelo-info">Elige tu favorito para subirlo en el ranking. Esta votación no indica compatibilidad con tu vehículo.</p>
+</section>
+
+<footer>
+  <div class="footer-grid">
+    <div class="footer-marca"><h3>ALM Chevrolet</h3><p>ALM Chevrolet · Repuestos para automóviles en Bogotá. Domicilios, recogida personal y envíos nacionales con costo de transporte.</p></div>
+    <div class="footer-col"><h4>Contacto</h4><ul><li><a href="https://wa.me/573204738768" target="_blank" rel="noopener">WhatsApp: +57 3204738768</a></li><li><a href="https://www.tiktok.com/@almchevrolet" target="_blank" rel="noopener">TikTok: @almchevrolet</a></li><li>📍 Bogotá</li></ul></div>
+    <div class="footer-col"><h4>Pagos</h4><ul><li>Addi</li><li>Sistecrédito</li><li>Contraentrega</li></ul></div>
+    <div class="footer-col"><h4>Categorías</h4><ul><li>Motor</li></ul></div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 ALM Chevrolet — Todos los derechos reservados</span>
+    <span>Confirma la compatibilidad de cada pieza antes de comprar.</span>
+  </div>
+  <div class="footer-credito">
+    Creada con <strong>Harvys</strong> · Prof. Harvey Sanabria ·
+    <a href="https://wa.me/573103323843?text=Hola%20Profesor%20Harvey%2C%20vi%20una%20tienda%20creada%20con%20Harvys%20y%20quiero%20m%C3%A1s%20informaci%C3%B3n." target="_blank" rel="noopener">WhatsApp 310 332 3843</a>
+  </div>
+</footer>
+
+<!-- Copia del proyecto para volver a abrirlo en Harvys (botón "Abrir"). No la borres. -->
+<script type="application/json" id="harvys-proyecto">{"negocio":{"nombre":"ALM Chevrolet","descripcion":"Repuestos para automóviles en Bogotá. Consulta disponibilidad y compatibilidad de piezas para tu vehículo por WhatsApp.","eslogan":"Encuentra el repuesto que tu motor necesita.","ciudad":"Bogotá","cobertura":"Domicilios en Bogotá y envíos nacionales con costo de transporte. Tiempo aproximado informado: 40 minutos; confirma cobertura y tiempo según tu destino por WhatsApp. Recogida personal disponible.","whatsapp":"573204738768","instagram":"","facebook":"","tiktok":"almchevrolet","horarios":[],"logo":""},"tema":{"nombreEstilo":"Azul noche","modo":"oscuro","colores":{"primario":"#89BCE8","textoSobrePrimario":"#102238","fondo":"#0C1727","fondoAlterno":"#122239","tarjeta":"#192C43","texto":"#F1F6FC","textoSuave":"#BACBDD","acento":"#A6CFF0"},"fuentes":{"titulos":"Oswald","cuerpo":"Montserrat"},"titulosMayusculas":true,"radio":8,"animaciones":"media","fondoEfecto":"ninguno","hero":"centrado","tarjetas":"borde"},"textos":{"heroEtiqueta":"Repuestos para automóviles · Bogotá","heroTitulo":"ALM","heroTituloResaltado":"Chevrolet","heroSubtitulo":"Encuentra el repuesto que tu motor necesita. Explora nuestro catálogo y confirma la compatibilidad por WhatsApp antes de comprar.","heroBoton":"Explorar repuestos","heroImagen":"https://placehold.co/600x600/png?text=Foto+pendiente","estadisticas":[{"valor":"{productos}","etiqueta":"Repuestos en el catálogo"},{"valor":"Bogotá","etiqueta":"Domicilios locales"},{"valor":"Colombia","etiqueta":"Envíos con costo"}],"bannerEtiqueta":"Piezas para tu vehículo","bannerTitulo":"Tu próximo repuesto,","bannerTituloResaltado":"a un mensaje","bannerTexto":"Consulta balancín, decalador, soporte motor, termostato, bomba de agua y culata. Confirma la referencia adecuada para tu automóvil, el transporte y las condiciones de entrega con ALM Chevrolet.","chips":["Domicilios en Bogotá","Recogida personal","Envíos con costo","Consulta por WhatsApp"],"catalogoEtiqueta":"Encuentra tu pieza","catalogoTitulo":"Catálogo de repuestos","botonAgregar":"+ Agregar al pedido","beneficiosEtiqueta":"Compra a tu manera","beneficiosTitulo":"Así te atendemos en ALM","recomendadosEtiqueta":"Explora el catálogo","recomendadosTitulo":"Repuestos para tener en cuenta","topEtiqueta":"Los favoritos de la comunidad","topTitulo":"Repuestos más votados","dueloEtiqueta":"Tu opinión cuenta","dueloTitulo":"¿Qué repuesto quieres destacar?","dueloInfo":"Elige tu favorito para subirlo en el ranking. Esta votación no indica compatibilidad con tu vehículo.","testimoniosEtiqueta":"Experiencias de clientes","testimoniosTitulo":"Opiniones sobre ALM Chevrolet","horariosEtiqueta":"Planea tu visita","horariosTitulo":"Horario de atención","footerTexto":"ALM Chevrolet · Repuestos para automóviles en Bogotá. Domicilios, recogida personal y envíos nacionales con costo de transporte.","footerFrase":"Confirma la compatibilidad de cada pieza antes de comprar.","carritoTitulo":"Tu pedido de repuestos","botonPagar":"Consultar pedido por WhatsApp"},"productos":[{"id":"alm-balancin","nombre":"Balancín","precio":30000,"categoria":"Motor","imagen":"foto:pvhpah","descripcion":"Repuesto de motor compatible con vehículos marca Chevrolet. Confirma por WhatsApp si la referencia corresponde al modelo y año de tu vehículo.","opciones":null,"destacado":false},{"id":"alm-decalador","nombre":"Decalador","precio":500000,"categoria":"Motor","imagen":"foto:1khygd","descripcion":"Repuesto de motor compatible con vehículos marca Chevrolet. Confirma por WhatsApp si la referencia corresponde al modelo y año de tu vehículo.","opciones":null,"destacado":false},{"id":"alm-soporte-motor","nombre":"Soporte motor","precio":120000,"categoria":"Motor","imagen":"foto:iin8zp","descripcion":"Repuesto de motor compatible con vehículos marca Chevrolet. Confirma por WhatsApp si la referencia corresponde al modelo y año de tu vehículo.","opciones":null,"destacado":false},{"id":"alm-termostato","nombre":"Termostato","precio":60000,"categoria":"Motor","imagen":"foto:63lsv9","descripcion":"Repuesto de motor compatible con vehículos marca Chevrolet. Confirma por WhatsApp si la referencia corresponde al modelo y año de tu vehículo.","opciones":null,"destacado":false},{"id":"alm-bomba-agua","nombre":"Bomba de agua","precio":150000,"categoria":"Motor","imagen":"foto:udu8ib","descripcion":"Repuesto de motor compatible con vehículos marca Chevrolet. Confirma por WhatsApp si la referencia corresponde al modelo y año de tu vehículo.","opciones":null,"destacado":false},{"id":"alm-culata","nombre":"Culata","precio":1500000,"categoria":"Motor","imagen":"foto:tc1e43","descripcion":"Repuesto de motor compatible con vehículos marca Chevrolet. Confirma por WhatsApp si la referencia corresponde al modelo y año de tu vehículo.","opciones":null,"destacado":false}],"beneficios":[{"icono":"🚚","titulo":"Domicilios en Bogotá","texto":"Tiempo aproximado informado: 40 minutos. Confirma el plazo y las condiciones para tu dirección por WhatsApp."},{"icono":"📦","titulo":"Envíos nacionales","texto":"Enviamos a otras ciudades con costo de transporte. Consulta el valor y el plazo antes de pedir."},{"icono":"📍","titulo":"Recogida personal","texto":"También puedes recoger tu repuesto. Coordina la dirección y el horario con el negocio."}],"testimonios":[],"pagos":{"metodos":[{"nombre":"Addi","icono":"💳","tipo":"otro"},{"nombre":"Sistecrédito","icono":"💳","tipo":"otro"},{"nombre":"Contraentrega","icono":"📦","tipo":"contraentrega"}],"numeroTransferencia":"[POR COMPLETAR]","titular":"[POR COMPLETAR]","contraentregaDetalle":"El negocio indica que ofrece contraentrega. Zonas, monto mínimo, medios de cobro, responsable del recaudo y posible costo adicional: [POR COMPLETAR]. Consulta las condiciones por WhatsApp. Addi y Sistecrédito se muestran como referencia; el prototipo no procesa pagos."},"backend":{"url":"https://script.google.com/macros/s/AKfycbxCQPL9ers4ITSxWh3IrVz-9g00SxkzNW-rmoQX4I2GGUS1nAZbqoDWK5iYpCt9WavA/exec"},"asistente":{"activo":true,"nombre":"Iori","saludo":"¡Hola! Soy Iori, el asistente de ALM Chevrolet. Te ayudo a consultar repuestos, precios y entregas. Para confirmar compatibilidad, habla con el negocio por WhatsApp."},"secciones":["banner","catalogo","beneficios","recomendados","top","duelo"],"personalizado":{"css":"/* Iori: posicionar el lanzador y su ventana a la izquierda. */\n#chat-widget, .chat-widget, #asistente-widget, .asistente-widget, .asistente-flotante,\n#chat-toggle, .chat-toggle, #chat-fab, .chat-fab, #asistente-toggle, .asistente-toggle, #asistente-btn, .asistente-btn,\n#chatbot, .chatbot, #chatbot-widget, .chatbot-widget, #chatbot-toggle, .chatbot-toggle, #chatbot-btn, .chatbot-btn, #chatbot-fab, .chatbot-fab,\n#assistant-widget, .assistant-widget, #assistant-toggle, .assistant-toggle, #assistant-fab, .assistant-fab, #assistant-button, .assistant-button,\n#bot-widget, .bot-widget, #bot-toggle, .bot-toggle, #bot-fab, .bot-fab, #bot-btn, .bot-btn,\n#chatBtn, #chatToggle, #chatFab, #chatbotToggle, #chatbotBtn, #assistantToggle,\nbutton[aria-label*=\"asistente\" i], button[aria-label*=\"chat\" i], button[title*=\"¿Te ayudo?\" i] {\n  right: auto !important;\n  left: 20px !important;\n  bottom: 20px !important;\n  inset-inline-start: 20px !important;\n  inset-inline-end: auto !important;\n  margin-left: 0 !important;\n  margin-right: auto !important;\n}\n#chat-panel, .chat-panel, #chat-window, .chat-window, #asistente-panel, .asistente-panel, #asistente-ventana, .asistente-ventana,\n#chatbot-panel, .chatbot-panel, #chatbot-window, .chatbot-window, #chatbot-box, .chatbot-box,\n#assistant-panel, .assistant-panel, #assistant-window, .assistant-window,\n#bot-panel, .bot-panel, #bot-window, .bot-window,\n#chatPanel, #chatWindow, #chatbotPanel, #chatbotWindow {\n  right: auto !important;\n  left: 20px !important;\n  inset-inline-start: 20px !important;\n  inset-inline-end: auto !important;\n  max-width: calc(100vw - 40px);\n}","secciones":[]}}</script>
+<script type="application/json" id="harvys-rutas">{"alm-balancin":"img/balancin-pvhpah.jpg","alm-decalador":"img/decalador-1khygd.jpg","alm-soporte-motor":"img/soporte-motor-iin8zp.png","alm-termostato":"img/termostato-63lsv9.jpg","alm-bomba-agua":"img/bomba-de-agua-udu8ib.jpg","alm-culata":"img/culata-tc1e43.jpg"}</script>
+<script src="script.js"></script>
+</body>
+</html>
